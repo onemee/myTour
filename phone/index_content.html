@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/ui-color.css">
+        <link rel="stylesheet" href="css/appcan.icon.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+    </head>
+    <body class="um-vp" ontouchstart>
+    <div id="listview"  class="ubt bc-border sc-bg">
+</div>
+
+
+        <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+   <script src="js/appcan.listview.js"></script>
+ </body>
+    <script>
+        appcan.ready(function() {
+            appcan.initBounce();
+            $('#listview li').each(function(i,v)
+            {
+               var data = v.lv_data;
+               if(!data)
+               {
+                   return;
+               } 
+               updateIndo(encodeURI(data.title),v)
+            });
+        })
+        
+       function updateIndo(city,ele)
+       {
+           var weatherUrl = 'http://api.map.baidu.com/telematics/v3/weather?location='+city+'&output=json&ak=hTXrtTGGcljoOMdf2jZcc1yD';
+           appcan.request.getJSON(weatherUrl,function(data)
+           {
+               if(data.error)
+               {
+                   alert('error!');
+               }
+               else{
+                   var  weatherData = data.results[0].weather_data;
+                   var today = weatherData[0];
+                   $(ele).find('.lis-icon-s').css('background-image','url("'+today.dayPictureUrl+'")');
+                   
+               }
+           });
+           
+       } 
+       
+       function openDetail(city)
+       {
+           appcan.window.open({
+               name:'detail',
+               data:'detail.html',
+               aniId:10
+           })
+           appcan.locStorage.val('city',city);
+       }
+        
+
+   var lv = appcan.listview({
+    selector : "#listview",
+    type : "thinLine",
+    hasIcon : true,
+    hasAngle : true,
+    hasSubTitle : false,
+    multiLine : 1,
+});
+lv.set([{
+    title : "北京",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}, {
+    title : "长春",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}, {
+    title : "哈尔滨",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}, {
+    title : "西安",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}, {
+    title : "广州",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}, {
+    title : "南京",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}, {
+    title : "天津",
+    icon:"./css/res/appcan_s.png",
+    subTitle:"12:05"
+}])
+lv.on("click",function(ele,obj,curEle){
+    openDetail(encodeURI(obj.title));
+})
+ </script>
+</html>
+
+
